@@ -1,5 +1,51 @@
 # Changelog
 
+## 2026-05-27 (Update 2)
+
+### Removed
+
+- **Posts per Year chart**: Removed the bar chart from the admin dashboard.
+  - `src/app/(admin)/admin/DashboardCharts.tsx` — removed `BarChart`, `Bar` imports and the entire "Posts per Year" chart block
+  - `src/app/(admin)/admin/page.tsx` — removed `yearlyData` aggregation and `yearlyPosts` prop
+
+### Added
+
+- **Static export for Vercel deployment**: The blog now supports static site generation via `npm run build:export`. Public pages are statically generated from the SQLite database at build time; admin panel is available only in dev mode.
+  - `next.config.ts` — changed `output` from `"standalone"` to `"export"`
+  - `package.json` — added `build:export` script
+  - `src/app/posts/[slug]/page.tsx` — added `generateStaticParams` for all published post slugs; removed `auth()` call
+  - `src/app/tag/[tag]/page.tsx` — added `generateStaticParams` for all tag slugs; removed pagination
+  - `src/app/page.tsx` — removed `searchParams`-based pagination and tag filtering; removed `auth()`; shows all published posts
+  - `src/app/(admin)/admin/layout.tsx` — detects `NEXT_EXPORT` env var and renders placeholder instead of calling `auth()`
+  - `src/app/(admin)/admin/posts/[id]/edit/page.tsx` — added `generateStaticParams` returning `[]`
+
+- **Hierarchical tags (directory management)**: Tags now support parent-child relationships, enabling folder-like organization. Tags can be edited and deleted from the admin panel.
+  - `prisma/schema.prisma` — added `parentId` and self-referencing `TagHierarchy` relation to the `Tag` model
+  - `prisma/seed.ts` — updated seed data with sample hierarchical tags (Math > Algebra, Calculus; Programming > TypeScript)
+  - `src/app/api/tags/route.ts` — `POST` now accepts optional `parentId`; `GET` includes parent info and children count
+  - `src/app/api/tags/[id]/route.ts` — new `PUT` (rename, change parent) and `DELETE` (with child-safety check) routes
+  - `src/app/(admin)/admin/tags/TagManager.tsx` — redesigned with tree view (expand/collapse), inline edit (name + parent selector), and delete (gated by child count)
+  - `src/app/(admin)/admin/tags/page.tsx` — updated query to include parent info
+  - `src/app/page.tsx` — sidebar tag list now renders with hierarchical indentation
+
+- **Toast notifications for config save**: Replaced inline message bar with floating toast notifications via `sonner`.
+  - `package.json` — added `sonner` dependency
+  - `src/app/(admin)/admin/layout.tsx` — added `<Toaster>` component
+  - `src/app/(admin)/admin/config/SiteConfigForm.tsx` — replaced `message` state bar with `toast.success()` / `toast.error()` calls
+
+- **Footer**: Site footer displaying `footer_text` from site config.
+  - `src/components/Footer.tsx` — new async server component reading `footer_text` from database
+  - `src/app/layout.tsx` — renders `<Footer />` after `{children}` in the root layout
+  - `src/app/page.tsx`, `src/app/tag/[tag]/page.tsx`, `src/components/ArticleContent.tsx` — changed outer wrapper from `min-h-screen` to `flex-1` to accommodate the footer
+
+### Changed
+
+- `src/app/page.tsx` — removed admin link in header (not applicable in static export)
+- `src/app/posts/[slug]/page.tsx` — `isLoggedIn` is now always `false` (static export has no auth)
+- `doc/USAGE.md` — added sections for static export / Vercel deployment, updated tag management docs for hierarchical tags, updated project structure and scripts table
+
+---
+
 ## 2026-05-27
 
 ### Added

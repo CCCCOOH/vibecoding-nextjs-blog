@@ -1,7 +1,15 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
 import { ArticleContent } from "@/components/ArticleContent";
+
+
+export async function generateStaticParams() {
+  const posts = await prisma.post.findMany({
+    where: { published: true },
+    select: { slug: true },
+  });
+  return posts.map((p) => ({ slug: p.slug }));
+}
 
 export default async function PostPage({
   params,
@@ -10,13 +18,12 @@ export default async function PostPage({
 }) {
   const { slug } = await params;
 
-  const [post, allTags, session] = await Promise.all([
+  const [post, allTags] = await Promise.all([
     prisma.post.findUnique({
       where: { slug },
       include: { tags: { include: { tag: true } } },
     }),
     prisma.tag.findMany({ orderBy: { name: "asc" } }),
-    auth(),
   ]);
 
   if (!post || (!post.published && process.env.NODE_ENV === "production")) {
@@ -38,7 +45,7 @@ export default async function PostPage({
         })),
       }}
       allTags={allTags.map((t) => ({ id: t.id, name: t.name, slug: t.slug }))}
-      isLoggedIn={!!session}
+      isLoggedIn={false}
     />
   );
 }

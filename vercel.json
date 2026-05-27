@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd blog && npm run build:export",
+  "outputDirectory": "blog/out",
+  "installCommand": "cd blog && npm install"
+}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
+
 export async function GET() {
   const configs = await prisma.siteConfig.findMany();
   return NextResponse.json(
@@ -10,6 +11,8 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
+  if (process.env.NEXT_EXPORT === "true") return NextResponse.json({ success: true });
+
   const session = await auth();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

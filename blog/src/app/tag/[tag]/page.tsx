@@ -2,18 +2,19 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { PostCard } from "@/components/PostCard";
-import { Pagination } from "@/components/Pagination";
+
+
+export async function generateStaticParams() {
+  const tags = await prisma.tag.findMany({ select: { slug: true } });
+  return tags.map((t) => ({ tag: t.slug }));
+}
 
 export default async function TagPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ tag: string }>;
-  searchParams: Promise<{ page?: string }>;
 }) {
-  const [{ tag: tagSlug }, sp] = await Promise.all([params, searchParams]);
-  const page = parseInt(sp.page || "1");
-  const pageSize = 10;
+  const { tag: tagSlug } = await params;
 
   const tag = await prisma.tag.findUnique({
     where: { slug: tagSlug },
@@ -33,16 +34,12 @@ export default async function TagPage({
       where,
       include: { tags: { include: { tag: true } } },
       orderBy: { createdAt: "desc" },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
     }),
     prisma.post.count({ where }),
   ]);
 
-  const totalPages = Math.ceil(total / pageSize);
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="flex-1 bg-gray-50">
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <Link
@@ -68,12 +65,6 @@ export default async function TagPage({
             ))}
           </div>
         )}
-
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          basePath={`/tag/${tagSlug}`}
-        />
       </main>
     </div>
   );

@@ -2,6 +2,11 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { PostForm } from "@/components/admin/PostForm";
 
+
+export function generateStaticParams() {
+  return [{ id: "_" }];
+}
+
 export default async function EditPostPage({
   params,
 }: {

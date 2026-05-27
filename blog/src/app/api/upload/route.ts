@@ -3,7 +3,10 @@ import { auth } from "@/lib/auth";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
+
 export async function POST(request: NextRequest) {
+  if (process.env.NEXT_EXPORT === "true") return NextResponse.json({ url: "" });
+
   const session = await auth();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

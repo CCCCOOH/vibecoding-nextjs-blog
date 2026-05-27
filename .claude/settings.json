@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(NEXT_EXPORT=true npx next build)",
+      "Bash(grep -v \"\\\\.map$\")",
+      "Bash(grep -v \"\\\\.txt$\")",
+      "Bash(generateStaticParams)",
+      "Bash(grep -rl \"missing generateStaticParams\\\\|missing `generateStaticParams`\\\\|does not have generateStaticParams\\\\|cannot be used with output.*export\\\\|static.*export.*error\\\\|output.*export.*missing\" /Users/sy/codes/syncNote/blog/node_modules/next/dist/ --include=\"*.js\" --include=\"*.ts\")",
+      "Bash(npx next *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3456/)",
+      "Bash(curl -s -o /dev/null -w \" %{http_code}\" http://localhost:3456/posts/hello-latex)",
+      "Bash(curl -s -o /dev/null -w \" %{http_code}\" http://localhost:3456/tag/math)",
+      "Bash(curl -s -o /dev/null -w \" %{http_code}\" http://localhost:3456/admin)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(curl -s -o /dev/null -w \"/ => %{http_code}\\\\n\" http://localhost:3457/)",
+      "Bash(curl -s -o /dev/null -w \"/posts/hello-latex => %{http_code}\\\\n\" http://localhost:3457/posts/hello-latex)",
+      "Bash(curl -s -o /dev/null -w \"/tag/math => %{http_code}\\\\n\" http://localhost:3457/tag/math)",
+      "Bash(curl -s -o /dev/null -w \"/admin => %{http_code}\\\\n\" http://localhost:3457/admin)"
+    ]
+  }
+}

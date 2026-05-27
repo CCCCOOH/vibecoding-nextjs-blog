@@ -29,15 +29,6 @@ export default async function AdminDashboard() {
     .map(([month, count]) => ({ month, count }))
     .sort((a, b) => a.month.localeCompare(b.month));
 
-  const yearlyData: Record<string, number> = {};
-  posts.forEach((p) => {
-    const key = String(p.createdAt.getFullYear());
-    yearlyData[key] = (yearlyData[key] || 0) + 1;
-  });
-  const yearlyPosts = Object.entries(yearlyData)
-    .map(([year, count]) => ({ year, count }))
-    .sort((a, b) => a.year.localeCompare(b.year));
-
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-900 mb-8">Dashboard</h1>
@@ -81,7 +72,6 @@ export default async function AdminDashboard() {
       <DashboardCharts
         tagData={tagData}
         monthlyPosts={monthlyPosts}
-        yearlyPosts={yearlyPosts}
       />
     </div>
   );

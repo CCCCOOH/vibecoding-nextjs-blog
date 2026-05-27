@@ -28,10 +28,13 @@ model Post {
 }
 
 model Tag {
-  id    String    @id @default(cuid())
-  name  String    @unique
-  slug  String    @unique
-  posts PostTag[]
+  id       String    @id @default(cuid())
+  name     String    @unique
+  slug     String    @unique
+  parentId String?
+  parent   Tag?      @relation("TagHierarchy", fields: [parentId], references: [id])
+  children Tag[]     @relation("TagHierarchy")
+  posts    PostTag[]
 }
 
 model PostTag {

@@ -1,56 +1,52 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
 import { getSiteConfig } from "@/lib/siteConfig";
 import { PostCard } from "@/components/PostCard";
 import { TagBadge } from "@/components/TagBadge";
-import { Pagination } from "@/components/Pagination";
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string; tag?: string }>;
-}) {
-  const params = await searchParams;
-  const page = parseInt(params.page || "1");
-  const tagFilter = params.tag;
-  const pageSize = 10;
+export const dynamic = "force-dynamic";
 
-  const where = {
-    published: true,
-    ...(tagFilter
-      ? { tags: { some: { tag: { slug: tagFilter } } } }
-      : {}),
-  };
+function buildTagDisplayList(tags: { id: string; name: string; slug: string; parentId: string | null }[]) {
+  const result: { id: string; name: string; slug: string; depth: number }[] = [];
+  const sorted = [...tags].sort((a, b) => a.name.localeCompare(b.name));
 
-  const [
-    posts, total, allTags, session, siteTitle, siteSubtitle,
-    authorName, authorAvatar, authorBio,
-  ] = await Promise.all([
-    prisma.post.findMany({
-      where,
-      include: { tags: { include: { tag: true } } },
-      orderBy: { createdAt: "desc" },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    }),
-    prisma.post.count({ where }),
-    prisma.tag.findMany({
-      include: { _count: { select: { posts: true } } },
-      orderBy: { name: "asc" },
-    }),
-    auth(),
-    getSiteConfig("site_title"),
-    getSiteConfig("site_subtitle"),
-    getSiteConfig("author_name"),
-    getSiteConfig("author_avatar"),
-    getSiteConfig("author_bio"),
-  ]);
+  function addChildren(parentId: string | null, depth: number) {
+    for (const tag of sorted) {
+      if (tag.parentId === parentId) {
+        result.push({ id: tag.id, name: tag.name, slug: tag.slug, depth });
+        addChildren(tag.id, depth + 1);
+      }
+    }
+  }
 
-  const totalPages = Math.ceil(total / pageSize);
+  addChildren(null, 0);
+  return result;
+}
+
+export default async function HomePage() {
+  const where = { published: true };
+
+  const [posts, allTags, siteTitle, siteSubtitle, authorName, authorAvatar, authorBio] =
+    await Promise.all([
+      prisma.post.findMany({
+        where,
+        include: { tags: { include: { tag: true } } },
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.tag.findMany({
+        select: { id: true, name: true, slug: true, parentId: true },
+      }),
+      getSiteConfig("site_title"),
+      getSiteConfig("site_subtitle"),
+      getSiteConfig("author_name"),
+      getSiteConfig("author_avatar"),
+      getSiteConfig("author_bio"),
+    ]);
+
+  const tagDisplayList = buildTagDisplayList(allTags);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="flex-1 bg-gray-50">
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-6 py-8 flex items-center justify-between">
           <div>
@@ -61,44 +57,17 @@ export default async function HomePage({
               {siteSubtitle || "Thoughts on math, programming, and more."}
             </p>
           </div>
-          {session && (
-            <Link
-              href="/admin"
-              className="text-sm text-gray-500 hover:text-blue-600 transition-colors"
-            >
-              Admin
-            </Link>
-          )}
         </div>
       </header>
 
       <div className="max-w-4xl mx-auto px-6 py-8">
         <div className="flex gap-8">
           <main className="flex-1 space-y-4">
-            {tagFilter && (
-              <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                <span>Filtered by:</span>
-                <TagBadge name={tagFilter} slug={tagFilter} />
-                <Link
-                  href="/"
-                  className="text-blue-600 hover:underline ml-2"
-                >
-                  Clear filter
-                </Link>
-              </div>
-            )}
-
             {posts.length === 0 ? (
               <p className="text-gray-500 text-center py-12">No posts found.</p>
             ) : (
               posts.map((post) => <PostCard key={post.id} post={post} />)
             )}
-
-            <Pagination
-              page={page}
-              totalPages={totalPages}
-              searchParams={tagFilter ? { tag: tagFilter } : {}}
-            />
           </main>
 
           <aside className="w-56 hidden lg:block space-y-6">
@@ -123,8 +92,8 @@ export default async function HomePage({
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
                 Tags
               </h3>
-              <div className="flex flex-wrap gap-2">
-                {allTags.map((tag) => (
+              <div className="flex flex-wrap gap-1">
+                {tagDisplayList.map((tag) => (
                   <TagBadge key={tag.id} name={tag.name} slug={tag.slug} />
                 ))}
               </div>

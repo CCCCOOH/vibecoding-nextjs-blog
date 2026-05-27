@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface SiteConfigFormProps {
   configs: Record<string, string>;
@@ -12,7 +13,6 @@ export function SiteConfigForm({ configs, keys }: SiteConfigFormProps) {
   const router = useRouter();
   const [values, setValues] = useState(configs);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [uploading, setUploading] = useState(false);
 
   function handleChange(key: string, value: string) {
@@ -32,10 +32,10 @@ export function SiteConfigForm({ configs, keys }: SiteConfigFormProps) {
     if (res.ok) {
       const data = await res.json();
       setValues((prev) => ({ ...prev, [key]: data.url }));
-      setMessage("Icon uploaded successfully.");
+      toast.success("Icon uploaded successfully.");
     } else {
       const data = await res.json();
-      setMessage(data.error || "Failed to upload.");
+      toast.error(data.error || "Failed to upload.");
     }
     setUploading(false);
   }
@@ -43,7 +43,6 @@ export function SiteConfigForm({ configs, keys }: SiteConfigFormProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
 
     const res = await fetch("/api/config", {
       method: "PUT",
@@ -52,28 +51,17 @@ export function SiteConfigForm({ configs, keys }: SiteConfigFormProps) {
     });
 
     if (res.ok) {
-      setMessage("Saved successfully.");
+      toast.success("Saved successfully.");
       router.refresh();
     } else {
       const data = await res.json();
-      setMessage(data.error || "Failed to save.");
+      toast.error(data.error || "Failed to save.");
     }
     setLoading(false);
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {message && (
-        <div
-          className={`p-3 rounded text-sm ${
-            message.includes("Failed") || message.includes("Invalid")
-              ? "bg-red-50 text-red-600"
-              : "bg-green-50 text-green-600"
-          }`}
-        >
-          {message}
-        </div>
-      )}
       {keys.map(({ key, label, type }) => (
         <div key={key}>
           <label

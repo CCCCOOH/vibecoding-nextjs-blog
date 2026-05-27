@@ -3,10 +3,19 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { generateSlug } from "@/lib/slug";
 
+
+export function generateStaticParams() {
+  return [{ id: "_" }];
+}
+
 export async function PUT(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
+  if (process.env.NEXT_EXPORT === "true") {
+    return NextResponse.json({});
+  }
+
   const session = await auth();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -47,6 +56,10 @@ export async function DELETE(
   _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
+  if (process.env.NEXT_EXPORT === "true") {
+    return NextResponse.json({ success: true });
+  }
+
   const session = await auth();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

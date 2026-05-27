@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
+const isExport = process.env.NEXT_EXPORT === "true";
+
 const nextConfig: NextConfig = {
-  output: "standalone",
-  serverExternalPackages: ["@libsql/client"],
+  output: isExport ? "export" : undefined,
 };
 
 export default nextConfig;

@@ -80,25 +80,6 @@ export function DashboardCharts({ tagData, monthlyPosts }: Props) {
           </ResponsiveContainer>
         )}
       </div>
-
-      <div className="bg-white rounded-lg border border-gray-200 p-6 lg:col-span-2">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">
-          Posts per Year
-        </h3>
-        {yearlyPosts.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-8">No data</p>
-        ) : (
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={yearlyPosts}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="year" tick={{ fontSize: 12 }} />
-              <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-              <Tooltip />
-              <Bar dataKey="count" fill="#2563eb" name="Posts" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        )}
-      </div>
     </div>
   );
 }

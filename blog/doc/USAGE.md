@@ -10,9 +10,10 @@
 6. [文章内联编辑](#文章内联编辑)
 7. [后台管理](#后台管理)
 8. [站点配置](#站点配置)
-9. [Docker 部署](#docker-部署)
-10. [环境变量](#环境变量)
-11. [常见问题](#常见问题)
+9. [静态导出与 Vercel 部署](#静态导出与-vercel-部署)
+10. [Docker 部署](#docker-部署)
+11. [环境变量](#环境变量)
+12. [常见问题](#常见问题)
 
 ---
 
@@ -41,8 +42,9 @@ npm run dev
 | 命令 | 说明 |
 |------|------|
 | `npm run dev` | 启动开发服务器（支持热更新） |
-| `npm run build` | 生产构建 |
+| `npm run build` | 生产构建（静态导出） |
 | `npm start` | 运行生产版本 |
+| `npm run build:export` | 构建静态文件用于 Vercel 部署 |
 | `npm run db:push` | 同步数据库 schema |
 | `npm run db:seed` | 写入种子数据（示例文章和标签） |
 | `npm run db:setup` | db:push + db:seed 一键初始化 |
@@ -72,7 +74,7 @@ blog/
 │   │   ├── ArticleContent.tsx    # 文章查看/编辑模式切换
 │   │   ├── PostCard.tsx          # 文章卡片
 │   │   ├── TagBadge.tsx          # 标签徽章
-│   │   ├── Pagination.tsx        # 分页组件
+│   │   ├── Footer.tsx            # 页脚组件
 │   │   └── admin/
 │   │       ├── AdminSidebar.tsx   # 后台侧边栏
 │   │       ├── PostEditor.tsx     # Markdown 编辑器
@@ -209,9 +211,11 @@ def fibonacci(n):
 - 访问 `http://localhost:3000/admin/login`
 - 默认账号：`admin@blog.com`，密码：`admin123`
 
+> 注意：管理后台仅在开发模式 (`npm run dev`) 下可用。静态导出后管理后台不可访问。
+
 ### Dashboard
 
-登录后进入 Dashboard，显示文章总数、已发布数量和标签数量。点击快捷按钮进入对应管理页面。
+登录后进入 Dashboard，显示文章总数、已发布数量和标签数量，以及 Posts by Tag 饼图和 Posts per Month 折线图。点击快捷按钮进入对应管理页面。
 
 ### 文章管理
 
@@ -222,10 +226,16 @@ def fibonacci(n):
 - **新建文章** `/admin/posts/new`：使用 Markdown 编辑器撰写
 - **编辑文章** `/admin/posts/[id]/edit`：修改已有文章
 
-### 标签管理
+### 标签管理（层级目录）
 
-- **标签页** `/admin/tags`：创建新标签，查看已有标签及关联文章数
+- **标签页** `/admin/tags`：支持创建、编辑、删除标签
+- **层级结构**：标签支持父子层级关系，可以像文件夹一样将标签分组到目录中
+  - 创建标签时可选择父标签
+  - 已有标签可通过「Edit」按钮修改名称和所属父标签
+  - 点击 ▸/▾ 图标展开/折叠子标签
+  - 有子标签的标签不可删除（需先删除子标签）
 - 创建文章时可以为文章选择多个标签
+- 首页标签侧边栏按层级缩进显示
 - 标签名称自动生成 slug 用于 URL
 
 ### 发布状态
@@ -251,7 +261,54 @@ def fibonacci(n):
 | 作者简介 | `author_bio` | 作者个人简介 |
 | 页脚文字 | `footer_text` | 网站底部版权等信息 |
 
-修改后点击「Save」保存，首页和浏览器标签页会立即反映更改。
+修改后点击「Save」保存，成功或失败会以右上角悬浮提示（Toast）的方式反馈。首页和浏览器标签页会立即反映更改。页脚文字（`footer_text`）会显示在所有公开页面的底部。
+
+---
+
+## 静态导出与 Vercel 部署
+
+### 概念
+
+项目支持将博客导出为纯静态文件（HTML/CSS/JS），一键部署到 Vercel 等静态托管平台。
+
+- **开发模式** (`npm run dev`)：管理后台正常运行，支持编辑文章、管理标签、修改配置
+- **静态导出** (`npm run build:export`)：从本地 SQLite 数据库读取内容，生成静态 HTML 文件到 `out/` 目录
+- **生产部署**：静态文件部署后，管理后台不可用。内容的更新流程为：本地 `npm run dev` 编辑 → `npm run build:export` 重新构建 → 重新部署
+
+### 构建静态文件
+
+```bash
+# 确保数据库和 Prisma 客户端已初始化
+npm run db:setup
+
+# 构建静态导出
+npm run build:export
+```
+
+构建产物在 `out/` 目录中，可以直接部署到任何静态托管服务。
+
+### 部署到 Vercel
+
+将项目推送到 GitHub 仓库，然后在 Vercel 中导入项目：
+
+1. 将整个项目（包括 `data.db` 数据库文件）提交到 Git
+2. 在 Vercel 导入项目时，设置构建命令为：`npm run build:export`
+3. 设置输出目录为：`out`
+4. Vercel 会自动构建并部署静态文件
+
+或者直接上传 `out/` 目录到 Vercel：
+
+```bash
+npm run build:export
+npx vercel out --prod
+```
+
+### 注意事项
+
+- 数据库文件 `data.db` 会被提交到 Git（确保不包含敏感信息）
+- 每次内容更新后需要重新构建和部署
+- 管理后台仅在 `npm run dev` 开发模式下可用
+- 静态导出后所有页面均为预渲染 HTML，无需服务器运行时
 
 ---
 

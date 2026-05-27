@@ -25,11 +25,38 @@ async function main() {
   });
   console.log(`Admin user: ${admin.email}`);
 
-  const tags = await Promise.all([
-    prisma.tag.upsert({ where: { slug: "math" }, update: {}, create: { name: "Math", slug: "math" } }),
-    prisma.tag.upsert({ where: { slug: "programming" }, update: {}, create: { name: "Programming", slug: "programming" } }),
-    prisma.tag.upsert({ where: { slug: "physics" }, update: {}, create: { name: "Physics", slug: "physics" } }),
-  ]);
+  const math = await prisma.tag.upsert({
+    where: { slug: "math" },
+    update: {},
+    create: { name: "Math", slug: "math" },
+  });
+  const algebra = await prisma.tag.upsert({
+    where: { slug: "algebra" },
+    update: {},
+    create: { name: "Algebra", slug: "algebra", parentId: math.id },
+  });
+  const calculus = await prisma.tag.upsert({
+    where: { slug: "calculus" },
+    update: {},
+    create: { name: "Calculus", slug: "calculus", parentId: math.id },
+  });
+  const programming = await prisma.tag.upsert({
+    where: { slug: "programming" },
+    update: {},
+    create: { name: "Programming", slug: "programming" },
+  });
+  const typescript = await prisma.tag.upsert({
+    where: { slug: "typescript" },
+    update: {},
+    create: { name: "TypeScript", slug: "typescript", parentId: programming.id },
+  });
+  const physics = await prisma.tag.upsert({
+    where: { slug: "physics" },
+    update: {},
+    create: { name: "Physics", slug: "physics" },
+  });
+
+  const tags = [math, algebra, calculus, programming, typescript, physics];
 
   const samplePost = await prisma.post.upsert({
     where: { slug: "hello-latex" },

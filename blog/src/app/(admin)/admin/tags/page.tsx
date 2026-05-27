@@ -3,7 +3,10 @@ import { TagManager } from "./TagManager";
 
 export default async function AdminTagsPage() {
   const tags = await prisma.tag.findMany({
-    include: { _count: { select: { posts: true } } },
+    include: {
+      _count: { select: { posts: true } },
+      parent: { select: { id: true, name: true } },
+    },
     orderBy: { name: "asc" },
   });
 

@@ -9,7 +9,8 @@
     "lint": "eslint",
     "db:push": "npx prisma db push",
     "db:seed": "npx tsx prisma/seed.ts",
-    "db:setup": "npx prisma db push && npx tsx prisma/seed.ts"
+    "db:setup": "npx prisma db push && npx tsx prisma/seed.ts",
+    "build:export": "NEXT_EXPORT=true next build"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -33,7 +34,8 @@
     "recharts": "^3.8.1",
     "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",
-    "remark-math": "^6.0.0"
+    "remark-math": "^6.0.0",
+    "sonner": "^2.0.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
