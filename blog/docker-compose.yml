@@ -1,0 +1,15 @@
+services:
+  blog:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - blog-data:/app/data
+    environment:
+      - AUTH_SECRET=change-me-in-production-use-a-random-string
+      - ADMIN_EMAIL=admin@blog.com
+      - ADMIN_PASSWORD=admin123
+    restart: unless-stopped
+
+volumes:
+  blog-data:
