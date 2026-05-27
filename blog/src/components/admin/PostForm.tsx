@@ -78,7 +78,7 @@ export function PostForm({ initialData, allTags }: PostFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded text-sm">
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded text-sm">
           {error}
         </div>
       )}
@@ -86,7 +86,7 @@ export function PostForm({ initialData, allTags }: PostFormProps) {
       <div>
         <label
           htmlFor="title"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >
           Title
         </label>
@@ -96,14 +96,14 @@ export function PostForm({ initialData, allTags }: PostFormProps) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <div>
         <label
           htmlFor="excerpt"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
         >
           Excerpt
         </label>
@@ -113,19 +113,19 @@ export function PostForm({ initialData, allTags }: PostFormProps) {
           value={excerpt}
           onChange={(e) => setExcerpt(e.target.value)}
           placeholder="A short description of the post"
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Content (Markdown with LaTeX support)
         </label>
         <PostEditor value={content} onChange={setContent} />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Tags
         </label>
         <div className="flex flex-wrap gap-2">
@@ -137,7 +137,7 @@ export function PostForm({ initialData, allTags }: PostFormProps) {
               className={`px-3 py-1 rounded-full text-sm transition-colors cursor-pointer ${
                 selectedTags.includes(tag.id)
                   ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
               {tag.name}
@@ -154,7 +154,7 @@ export function PostForm({ initialData, allTags }: PostFormProps) {
           onChange={(e) => setPublished(e.target.checked)}
           className="w-4 h-4"
         />
-        <label htmlFor="published" className="text-sm text-gray-700">
+        <label htmlFor="published" className="text-sm text-gray-700 dark:text-gray-300">
           Published
         </label>
       </div>
@@ -174,7 +174,7 @@ export function PostForm({ initialData, allTags }: PostFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="text-gray-600 hover:text-gray-800 transition-colors cursor-pointer"
+          className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors cursor-pointer"
         >
           Cancel
         </button>

@@ -46,14 +46,14 @@ export default async function HomePage() {
   const tagDisplayList = buildTagDisplayList(allTags);
 
   return (
-    <div className="flex-1 bg-gray-50">
-      <header className="bg-white border-b border-gray-200">
+    <div className="flex-1 bg-gray-50 dark:bg-gray-950">
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-4xl mx-auto px-6 py-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
               <Link href="/">{siteTitle || "Blog with LaTeX"}</Link>
             </h1>
-            <p className="text-gray-500 mt-1">
+            <p className="text-gray-500 dark:text-gray-400 mt-1">
               {siteSubtitle || "Thoughts on math, programming, and more."}
             </p>
           </div>
@@ -64,7 +64,7 @@ export default async function HomePage() {
         <div className="flex gap-8">
           <main className="flex-1 space-y-4">
             {posts.length === 0 ? (
-              <p className="text-gray-500 text-center py-12">No posts found.</p>
+              <p className="text-gray-500 dark:text-gray-400 text-center py-12">No posts found.</p>
             ) : (
               posts.map((post) => <PostCard key={post.id} post={post} />)
             )}
@@ -72,7 +72,7 @@ export default async function HomePage() {
 
           <aside className="w-56 hidden lg:block space-y-6">
             {(authorName || authorAvatar || authorBio) && (
-              <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
+              <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center">
                 {authorAvatar && (
                   <img
                     src={authorAvatar}
@@ -81,15 +81,15 @@ export default async function HomePage() {
                   />
                 )}
                 {authorName && (
-                  <p className="font-semibold text-gray-900">{authorName}</p>
+                  <p className="font-semibold text-gray-900 dark:text-gray-100">{authorName}</p>
                 )}
                 {authorBio && (
-                  <p className="text-sm text-gray-500 mt-2">{authorBio}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{authorBio}</p>
                 )}
               </div>
             )}
             <div>
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
                 Tags
               </h3>
               <div className="flex flex-wrap gap-1">

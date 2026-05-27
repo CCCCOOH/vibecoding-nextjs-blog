@@ -27,12 +27,12 @@ interface Props {
 export function DashboardCharts({ tagData, monthlyPosts }: Props) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-4">
           Posts by Tag
         </h3>
         {tagData.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-8">No data</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-8">No data</p>
         ) : (
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -56,12 +56,12 @@ export function DashboardCharts({ tagData, monthlyPosts }: Props) {
         )}
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-4">
           Posts per Month
         </h3>
         {monthlyPosts.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-8">No data</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-8">No data</p>
         ) : (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyPosts}>

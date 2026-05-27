@@ -97,3 +97,7 @@ All routes are under `src/app/api/`:
 ### Docker
 
 Multi-stage build producing a standalone Node.js image. Entrypoint script (`docker-entrypoint.sh`) runs `prisma db push` and seeds the database before starting the server.
+
+## Working style
+
+When you need to ask the user questions or confirm requirements, **always use the `AskUserQuestion` tool** instead of embedding questions in plain text responses. **Always ask questions in Chinese (中文).**

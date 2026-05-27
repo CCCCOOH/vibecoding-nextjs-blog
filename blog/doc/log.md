@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-05-27 (Update 3)
+
+### Added
+
+- **Dark/Light theme toggle**: Added theme switching with three modes: light, dark, and system (auto). A theme toggle button with sun/moon icon sits in the global navigation bar.
+  - `package.json` — added `next-themes` dependency
+  - `src/components/ThemeProvider.tsx` — new client component wrapping `next-themes` ThemeProvider (class-based, system default, no transition flash)
+  - `src/components/ThemeToggle.tsx` — new client component with sun/moon/system icons and three-mode cycling
+  - `src/components/Navbar.tsx` — new global sticky top navigation bar with site title link and ThemeToggle
+  - `src/app/layout.tsx` — added `suppressHydrationWarning`, `<ThemeProvider>`, and `<Navbar />`
+  - `src/app/globals.css` — added `@custom-variant dark (&:where(.dark, .dark *))` and `.dark` CSS variable overrides
+  - All components (~20 files) — added `dark:` variant classes for backgrounds, text, borders, and hover states
+
+- **One-click Deploy to Vercel**: Admin dashboard now has a "Deploy to Vercel" button that runs git add/commit/push to trigger Vercel auto-deployment.
+  - `src/app/api/deploy/route.ts` — new POST API (auth-gated, runs `git add -A && git commit && git push`)
+  - `src/components/admin/DeployButton.tsx` — new client component with loading state and sonner toast feedback
+  - `src/app/(admin)/admin/page.tsx` — added `<DeployButton />` to the action buttons row
+
+### Changed
+
+- **Edit button on public post pages**: Edit button now checks real NextAuth session (was hardcoded `false`). Clicking it navigates to `/admin/posts/[id]/edit` instead of inline editing.
+  - `src/app/posts/[slug]/page.tsx` — added `auth()` call, removed hardcoded `isLoggedIn={false}`, removed `allTags` fetch
+  - `src/components/ArticleContent.tsx` — removed entire inline editor (120+ lines: `isEditing` state, EasyMDE form, tag selector, save/cancel handlers); replaced Edit button with `<Link>` to admin edit page; removed `allTags` prop
+
+### Fixed
+
+- **Auth route `force-static`**: Removed `export const dynamic = "force-static"` from all API routes and pages. This was breaking login, logout, and session checks because Next.js was serving cached static responses instead of running the handlers dynamically. Also added `force-dynamic` to admin layout.
+  - All 11 files in `src/app/api/` and `src/app/` — removed `force-static` declarations
+  - `src/app/(admin)/admin/layout.tsx` — added `force-dynamic`
+
+---
+
 ## 2026-05-27 (Update 2)
 
 ### Removed

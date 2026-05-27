@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { DashboardCharts } from "./DashboardCharts";
+import { DeployButton } from "@/components/admin/DeployButton";
 
 export default async function AdminDashboard() {
   const [postCount, publishedCount, tagCount] = await Promise.all([
@@ -31,20 +32,20 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-8">Dashboard</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <p className="text-3xl font-bold text-gray-900">{postCount}</p>
-          <p className="text-sm text-gray-500 mt-1">Total Posts</p>
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{postCount}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Total Posts</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <p className="text-3xl font-bold text-green-600">{publishedCount}</p>
-          <p className="text-sm text-gray-500 mt-1">Published</p>
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <p className="text-3xl font-bold text-green-600 dark:text-green-400">{publishedCount}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Published</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <p className="text-3xl font-bold text-blue-600">{tagCount}</p>
-          <p className="text-sm text-gray-500 mt-1">Tags</p>
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{tagCount}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Tags</p>
         </div>
       </div>
 
@@ -57,16 +58,17 @@ export default async function AdminDashboard() {
         </Link>
         <Link
           href="/admin/posts"
-          className="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded hover:bg-gray-50 transition-colors text-sm"
+          className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-4 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm"
         >
           Manage Posts
         </Link>
         <Link
           href="/admin/tags"
-          className="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded hover:bg-gray-50 transition-colors text-sm"
+          className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 px-4 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm"
         >
           Manage Tags
         </Link>
+        <DeployButton />
       </div>
 
       <DashboardCharts

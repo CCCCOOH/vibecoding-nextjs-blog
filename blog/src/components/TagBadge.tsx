@@ -16,7 +16,7 @@ export function TagBadge({
     return (
       <Link
         href={`/tag/${slug}`}
-        className={`${baseClasses} bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors`}
+        className={`${baseClasses} bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/60 transition-colors`}
       >
         {name}
       </Link>
@@ -24,6 +24,6 @@ export function TagBadge({
   }
 
   return (
-    <span className={`${baseClasses} bg-blue-100 text-blue-700`}>{name}</span>
+    <span className={`${baseClasses} bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300`}>{name}</span>
   );
 }

@@ -26,18 +26,18 @@ export function Pagination({
       {page > 1 && (
         <Link
           href={buildHref(page - 1)}
-          className="px-3 py-1.5 rounded border border-gray-300 text-sm hover:bg-gray-100 transition-colors"
+          className="px-3 py-1.5 rounded border border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         >
           Previous
         </Link>
       )}
-      <span className="text-sm text-gray-600">
+      <span className="text-sm text-gray-600 dark:text-gray-400">
         Page {page} of {totalPages}
       </span>
       {page < totalPages && (
         <Link
           href={buildHref(page + 1)}
-          className="px-3 py-1.5 rounded border border-gray-300 text-sm hover:bg-gray-100 transition-colors"
+          className="px-3 py-1.5 rounded border border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         >
           Next
         </Link>

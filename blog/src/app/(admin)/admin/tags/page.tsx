@@ -12,7 +12,7 @@ export default async function AdminTagsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Tags</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-8">Tags</h1>
       <TagManager tags={tags} />
     </div>
   );

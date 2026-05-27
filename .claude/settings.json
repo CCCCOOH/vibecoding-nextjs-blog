@@ -15,7 +15,8 @@
       "Bash(curl -s -o /dev/null -w \"/ => %{http_code}\\\\n\" http://localhost:3457/)",
       "Bash(curl -s -o /dev/null -w \"/posts/hello-latex => %{http_code}\\\\n\" http://localhost:3457/posts/hello-latex)",
       "Bash(curl -s -o /dev/null -w \"/tag/math => %{http_code}\\\\n\" http://localhost:3457/tag/math)",
-      "Bash(curl -s -o /dev/null -w \"/admin => %{http_code}\\\\n\" http://localhost:3457/admin)"
+      "Bash(curl -s -o /dev/null -w \"/admin => %{http_code}\\\\n\" http://localhost:3457/admin)",
+      "Bash(npm install *)"
     ]
   }
 }

@@ -145,14 +145,14 @@ export function TagManager({ tags }: { tags: TagData[] }) {
     return (
       <div key={tag.id}>
         <div
-          className={`flex items-center gap-3 px-4 py-2.5 border-b border-gray-100 hover:bg-gray-50 ${
-            depth > 0 ? "ml-6 border-l-2 border-gray-100" : ""
+          className={`flex items-center gap-3 px-4 py-2.5 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 ${
+            depth > 0 ? "ml-6 border-l-2 border-gray-100 dark:border-gray-800" : ""
           }`}
         >
           {hasChildren ? (
             <button
               onClick={() => toggleExpand(tag.id)}
-              className="text-gray-400 hover:text-gray-600 w-5 text-sm cursor-pointer"
+              className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 w-5 text-sm cursor-pointer"
             >
               {isExpanded ? "▾" : "▸"}
             </button>
@@ -166,7 +166,7 @@ export function TagManager({ tags }: { tags: TagData[] }) {
                 type="text"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
-                className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 autoFocus
               />
               <select
@@ -174,7 +174,7 @@ export function TagManager({ tags }: { tags: TagData[] }) {
                 onChange={(e) =>
                   setEditParentId(e.target.value || null)
                 }
-                className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">(root)</option>
                 {tags
@@ -201,28 +201,28 @@ export function TagManager({ tags }: { tags: TagData[] }) {
             </div>
           ) : (
             <>
-              <span className="flex-1 text-sm text-gray-900 font-medium">
+              <span className="flex-1 text-sm text-gray-900 dark:text-gray-100 font-medium">
                 {tag.name}
               </span>
-              <span className="text-xs text-gray-400 w-20 text-right">
+              <span className="text-xs text-gray-400 dark:text-gray-500 w-20 text-right">
                 {tag._count.posts} posts
               </span>
               <button
                 onClick={() => startEdit(tag)}
-                className="text-xs text-blue-600 hover:text-blue-800 cursor-pointer"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer"
               >
                 Edit
               </button>
               {childCount(tag) === 0 && (
                 <button
                   onClick={() => handleDelete(tag.id)}
-                  className="text-xs text-red-500 hover:text-red-700 cursor-pointer"
+                  className="text-xs text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 cursor-pointer"
                 >
                   Delete
                 </button>
               )}
               {childCount(tag) > 0 && (
-                <span className="text-xs text-gray-300 w-10 text-right">
+                <span className="text-xs text-gray-300 dark:text-gray-600 w-10 text-right">
                   --
                 </span>
               )}
@@ -240,7 +240,7 @@ export function TagManager({ tags }: { tags: TagData[] }) {
     <div className="space-y-6">
       <form onSubmit={handleCreate} className="flex gap-3 max-w-lg items-end">
         <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             New Tag Name
           </label>
           <input
@@ -248,17 +248,17 @@ export function TagManager({ tags }: { tags: TagData[] }) {
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="e.g. Linear Algebra"
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Parent
           </label>
           <select
             value={newParentId || ""}
             onChange={(e) => setNewParentId(e.target.value || null)}
-            className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           >
             <option value="">(root)</option>
             {tags.map((t) => (
@@ -278,17 +278,17 @@ export function TagManager({ tags }: { tags: TagData[] }) {
       </form>
 
       {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded text-sm">{error}</div>
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded text-sm">{error}</div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
         {tags.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">No tags yet.</div>
+          <div className="p-8 text-center text-gray-500 dark:text-gray-400">No tags yet.</div>
         ) : (
           <div>
             {roots.map((root) => renderTagRow(root, 0))}
             {roots.length === 0 && (
-              <div className="p-8 text-center text-gray-500">
+              <div className="p-8 text-center text-gray-500 dark:text-gray-400">
                 No root-level tags.
               </div>
             )}

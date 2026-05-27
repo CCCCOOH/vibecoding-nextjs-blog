@@ -7,13 +7,15 @@
 3. [项目结构](#项目结构)
 4. [写作指南](#写作指南)
 5. [代码高亮](#代码高亮)
-6. [文章内联编辑](#文章内联编辑)
-7. [后台管理](#后台管理)
-8. [站点配置](#站点配置)
-9. [静态导出与 Vercel 部署](#静态导出与-vercel-部署)
-10. [Docker 部署](#docker-部署)
-11. [环境变量](#环境变量)
-12. [常见问题](#常见问题)
+6. [明暗主题切换](#明暗主题切换)
+7. [文章编辑](#文章编辑)
+8. [后台管理](#后台管理)
+9. [站点配置](#站点配置)
+10. [一键部署到 Vercel](#一键部署到-vercel)
+11. [静态导出与 Vercel 部署](#静态导出与-vercel-部署)
+12. [Docker 部署](#docker-部署)
+13. [环境变量](#环境变量)
+14. [常见问题](#常见问题)
 
 ---
 
@@ -71,12 +73,17 @@ blog/
 │   │   └── api/               # API 路由
 │   ├── components/
 │   │   ├── MarkdownRenderer.tsx  # Markdown + LaTeX + 代码高亮渲染
-│   │   ├── ArticleContent.tsx    # 文章查看/编辑模式切换
+│   │   ├── ArticleContent.tsx    # 文章查看（含编辑跳转按钮）
 │   │   ├── PostCard.tsx          # 文章卡片
 │   │   ├── TagBadge.tsx          # 标签徽章
+│   │   ├── Pagination.tsx        # 分页导航
 │   │   ├── Footer.tsx            # 页脚组件
+│   │   ├── Navbar.tsx            # 全局导航栏（含主题切换按钮）
+│   │   ├── ThemeProvider.tsx     # 主题提供者（next-themes）
+│   │   ├── ThemeToggle.tsx       # 明暗主题切换按钮
 │   │   └── admin/
 │   │       ├── AdminSidebar.tsx   # 后台侧边栏
+│   │       ├── DeployButton.tsx   # 一键部署到 Vercel 按钮
 │   │       ├── PostEditor.tsx     # Markdown 编辑器
 │   │       └── PostForm.tsx       # 文章编辑表单
 │   └── lib/
@@ -188,17 +195,23 @@ def fibonacci(n):
 
 ---
 
-## 文章内联编辑
+## 明暗主题切换
 
-登录后，在文章详情页（`/posts/[slug]`）的顶部会显示「Edit」按钮。点击后页面原地切换为编辑模式，可修改：
+博客支持三种主题模式：**亮色**、**暗色** 和 **跟随系统**。全局导航栏右上角的切换按钮可循环切换三种模式：
 
-- 文章标题
-- 摘要
-- 正文（Markdown 编辑器）
-- 标签
-- 发布状态
+| 图标 | 模式 | 说明 |
+|------|------|------|
+| 太阳 (☀️) | 亮色 | 始终使用浅色背景 |
+| 月亮 (🌙) | 暗色 | 始终使用深色背景 |
+| 方框 (⊡) | 跟随系统 | 自动根据操作系统设置切换亮/暗 |
 
-编辑完成后点击「Save」保存并返回阅读模式，或点击「Cancel」放弃修改。
+主题选择会自动保存在浏览器中（localStorage），刷新页面后保持不变。所有页面（公开页面和后台管理）均支持暗色模式。
+
+---
+
+## 文章编辑
+
+登录后，在文章详情页（`/posts/[slug]`）的顶部会显示「Edit」按钮。点击后跳转到后台编辑页面 `/admin/posts/[id]/edit`，使用完整的文章编辑表单进行修改。
 
 > 注意：此功能需要登录后才可见。未登录用户不会看到编辑按钮。
 
@@ -215,7 +228,7 @@ def fibonacci(n):
 
 ### Dashboard
 
-登录后进入 Dashboard，显示文章总数、已发布数量和标签数量，以及 Posts by Tag 饼图和 Posts per Month 折线图。点击快捷按钮进入对应管理页面。
+登录后进入 Dashboard，显示文章总数、已发布数量和标签数量，以及 Posts by Tag 饼图和 Posts per Month 折线图。快捷操作按钮包括「New Post」「Manage Posts」「Manage Tags」，以及「Deploy to Vercel」一键部署按钮。
 
 ### 文章管理
 
@@ -262,6 +275,16 @@ def fibonacci(n):
 | 页脚文字 | `footer_text` | 网站底部版权等信息 |
 
 修改后点击「Save」保存，成功或失败会以右上角悬浮提示（Toast）的方式反馈。首页和浏览器标签页会立即反映更改。页脚文字（`footer_text`）会显示在所有公开页面的底部。
+
+---
+
+## 一键部署到 Vercel
+
+后台 Dashboard（`/admin`）提供了「Deploy to Vercel」按钮，点击后自动执行 `git add -A` → `git commit` → `git push`，将本地变更推送到 GitHub。Vercel 检测到 GitHub 推送后会自动触发构建和静态部署。
+
+操作结果通过右上角的 Toast 提示反馈（成功/失败/无变更）。
+
+> 注意：此功能仅在开发模式 (`npm run dev`) 下可用，需要配置好 Git 远程仓库。
 
 ---
 

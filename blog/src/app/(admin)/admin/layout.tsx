@@ -13,12 +13,12 @@ export default async function AdminLayout({
 }) {
   if (process.env.NEXT_EXPORT === "true") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Panel</h1>
-          <p className="text-gray-500">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Admin Panel</h1>
+          <p className="text-gray-500 dark:text-gray-400">
             The admin panel is only available in development mode (
-            <code className="bg-gray-100 px-1 rounded">npm run dev</code>
+            <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">npm run dev</code>
             ).
           </p>
         </div>
@@ -32,12 +32,12 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700">Admin Panel</span>
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-6 py-3 flex items-center justify-between">
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Admin Panel</span>
         <Link
           href="/"
-          className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
+          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
         >
           &larr; View Site
         </Link>
